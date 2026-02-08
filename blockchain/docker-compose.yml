@@ -1,13 +1,19 @@
 services:
   proof-server:
-    image: midnightnetwork/proof-server
+    image: midnightnetwork/proof-server:latest
     container_name: midnight-proof-server
     ports:
       - "6300:6300"
+    # Note: --network testnet refers to the ZK circuit version, 
+    # not a remote connection. It is required even for local dev.
     command: ["midnight-proof-server", "--network", "testnet"]
+    restart: unless-stopped
 
-  devnet:
-    image: midnightnetwork/midnight-node-standalone
-    container_name: midnight-devnet
+  node:
+    image: midnightnetwork/midnight-node:latest
+    container_name: midnight-node
+    environment:
+      - CFG_PRESET=dev  # CRITICAL: Enables standalone/local mode
     ports:
-      - "9944:9944" # RPC port for the node
+      - "9944:9944"
+    restart: unless-stopped
