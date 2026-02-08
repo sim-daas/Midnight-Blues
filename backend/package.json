@@ -7,13 +7,29 @@
     "start": "node api-server.js",
     "dev": "nodemon api-server.js"
   },
-  "keywords": ["midnight", "blockchain", "zk-proof", "privacy"],
+  "keywords": [
+    "midnight",
+    "blockchain",
+    "zk-proof",
+    "privacy"
+  ],
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "express": "^4.18.2",
+    "@midnight-ntwrk/ledger-v7": "^7.0.0",
+    "@midnight-ntwrk/wallet-sdk-address-format": "^3.0.0",
+    "@midnight-ntwrk/wallet-sdk-dust-wallet": "^1.0.0",
+    "@midnight-ntwrk/wallet-sdk-facade": "^1.0.0",
+    "@midnight-ntwrk/wallet-sdk-hd": "^3.0.0",
+    "@midnight-ntwrk/wallet-sdk-shielded": "^1.0.0",
+    "@midnight-ntwrk/wallet-sdk-unshielded-wallet": "^1.0.0",
+    "bip39": "^3.1.0",
+    "body-parser": "^1.20.2",
     "cors": "^2.8.5",
-    "body-parser": "^1.20.2"
+    "express": "^4.18.2",
+    "fp-ts": "^2.16.11",
+    "io-ts": "^2.2.22",
+    "rxjs": "^7.8.2"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"

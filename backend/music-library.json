@@ -1,0 +1,59 @@
+{
+    "songs": [
+        {
+            "id": "song1",
+            "title": "Midnight Serenade",
+            "artist": "The Midnight Artist",
+            "tier": 1,
+            "requiredTokens": 500,
+            "description": "A hauntingly beautiful composition that captures the essence of midnight",
+            "url": "https://example.com/midnight-serenade.mp3",
+            "duration": "3:45",
+            "genre": "Ambient"
+        },
+        {
+            "id": "song2",
+            "title": "Shadows & Dreams",
+            "artist": "The Midnight Artist",
+            "tier": 2,
+            "requiredTokens": 1000,
+            "description": "Where reality blurs with imagination in ethereal melodies",
+            "url": "https://example.com/shadows-dreams.mp3",
+            "duration": "4:12",
+            "genre": "Electronic"
+        },
+        {
+            "id": "song3",
+            "title": "Eclipse Symphony",
+            "artist": "The Midnight Artist",
+            "tier": 3,
+            "requiredTokens": 1500,
+            "description": "An epic orchestral journey through cosmic darkness and light",
+            "url": "https://example.com/eclipse-symphony.mp3",
+            "duration": "5:30",
+            "genre": "Orchestral"
+        },
+        {
+            "id": "song4",
+            "title": "Neon Whispers",
+            "artist": "The Midnight Artist",
+            "tier": 4,
+            "requiredTokens": 2000,
+            "description": "Synthesized secrets from the digital underground",
+            "url": "https://example.com/neon-whispers.mp3",
+            "duration": "4:00",
+            "genre": "Synthwave"
+        },
+        {
+            "id": "song5",
+            "title": "Lunar Lullaby",
+            "artist": "The Midnight Artist",
+            "tier": 5,
+            "requiredTokens": 2500,
+            "description": "The most exclusive track - a celestial bedtime story",
+            "url": "https://example.com/lunar-lullaby.mp3",
+            "duration": "6:15",
+            "genre": "Ambient"
+        }
+    ]
+}
