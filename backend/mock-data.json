@@ -1,0 +1,42 @@
+{
+    "transfers": [
+        {
+            "fanAddress": "0x123456789",
+            "artistAddress": "0xABCDEF",
+            "amount": 51,
+            "timestamp": "2026-02-08T10:30:00Z",
+            "txHash": "0xabcd1234567890"
+        },
+        {
+            "fanAddress": "0x987654321",
+            "artistAddress": "0xABCDEF",
+            "amount": 75,
+            "timestamp": "2026-02-08T11:15:00Z",
+            "txHash": "0xefgh0987654321"
+        },
+        {
+            "fanAddress": "0x111222333",
+            "artistAddress": "0xABCDEF",
+            "amount": 25,
+            "timestamp": "2026-02-08T09:45:00Z",
+            "txHash": "0xijkl1112223334"
+        },
+        {
+            "fanAddress": "0xAABBCCDD",
+            "artistAddress": "0xABCDEF",
+            "amount": 100,
+            "timestamp": "2026-02-08T08:20:00Z",
+            "txHash": "0xmnop9876543210"
+        }
+    ],
+    "artists": {
+        "0xABCDEF": {
+            "name": "The Midnight Artist",
+            "secretContent": {
+                "title": "Secret Track: Midnight Serenade",
+                "url": "https://example.com/secret-track.mp3",
+                "description": "An exclusive unreleased track only for supporters who sent > 50 tDust"
+            }
+        }
+    }
+}

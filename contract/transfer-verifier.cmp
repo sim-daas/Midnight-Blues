@@ -1,0 +1,90 @@
+// Midnight Lace - Transfer Verification Contract
+// This Compact contract verifies that a fan has sent > 50 tDust to an artist
+// using zero-knowledge proofs to maintain privacy
+
+circuit TransferVerifier {
+  // Public inputs (visible on-chain)
+  public artistAddress: Address;
+  
+  // Private inputs (kept secret, only proven)
+  private fanAddress: Address;
+  private transferAmount: Uint64;
+  private threshold: Uint64;
+  
+  // Public output - verification result
+  public verified: Bool;
+  
+  // Witness generation - proves the statement without revealing private data
+  witness {
+    // The private transfer amount must exceed the threshold
+    assert(transferAmount > threshold);
+    
+    // Additional validation: amount must be positive
+    assert(transferAmount > 0);
+    
+    // Set verification result
+    verified = true;
+  }
+}
+
+// Contract state (stored on-chain)
+contract SecretContentAccess {
+  // Mapping of artist addresses to their content access requirements threshold
+  state thresholds: Map<Address, Uint64>;
+  
+  // Track which fans have been verified for which artists
+  state accessGranted: Map<(Address, Address), Bool>; // (fan, artist) -> hasAccess
+  
+  // Initialize the contract
+  constructor() {
+    // Default threshold is 50 tDust
+  }
+  
+  // Artist sets their own threshold
+  public function setThreshold(artistAddress: Address, threshold: Uint64) {
+    // In production, add authentication to ensure only the artist can set this
+    thresholds[artistAddress] = threshold;
+  }
+  
+  // Verify transfer and grant access
+  public function verifyAndGrantAccess(
+    proof: Proof<TransferVerifier>,
+    fanAddress: Address,
+    artistAddress: Address
+  ) -> Bool {
+    // Extract public inputs from the proof
+    let proofArtist = proof.publicInputs.artistAddress;
+    
+    // Ensure the proof is for the correct artist
+    assert(proofArtist == artistAddress);
+    
+    // Verify the zero-knowledge proof
+    let isValid = verify(proof);
+    
+    if (isValid) {
+      // Grant access to the fan for this artist's content
+      accessGranted[(fanAddress, artistAddress)] = true;
+      return true;
+    }
+    
+    return false;
+  }
+  
+  // Check if a fan has access to an artist's content
+  public function hasAccess(fanAddress: Address, artistAddress: Address) -> Bool {
+    let access = accessGranted[(fanAddress, artistAddress)];
+    return access != null ? access : false;
+  }
+  
+  // Get the threshold for an artist
+  public function getThreshold(artistAddress: Address) -> Uint64 {
+    let threshold = thresholds[artistAddress];
+    return threshold != null ? threshold : 50; // Default to 50
+  }
+}
+
+// Event emitted when access is granted
+event AccessGranted {
+  artistAddress: Address,
+  timestamp: Uint64
+}

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Midnight Lace - Secret Content Unlock</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="stars"></div>
+    
+    <div class="container">
+        <header class="header">
+            <h1 class="logo">🌙 Midnight Lace</h1>
+            <p class="tagline">Privacy-Preserving Content Access via Zero-Knowledge Proofs</p>
+        </header>
+
+        <main class="main-content">
+            <!-- Access Request Section -->
+            <section class="access-section" id="accessSection">
+                <div class="card">
+                    <h2>🎵 Unlock Secret Track</h2>
+                    <p class="description">
+                        Prove you've supported <strong>The Midnight Artist</strong> with more than <strong>50 tDust</strong> 
+                        to access their exclusive unreleased track.
+                    </p>
+
+                    <form id="accessForm" class="access-form">
+                        <div class="form-group">
+                            <label for="fanAddress">Your Wallet Address</label>
+                            <input 
+                                type="text" 
+                                id="fanAddress" 
+                                name="fanAddress"
+                                placeholder="0x123456789..."
+                                required
+                            >
+                            <small>Your address remains private in the zero-knowledge proof</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="artistAddress">Artist Address</label>
+                            <input 
+                                type="text" 
+                                id="artistAddress" 
+                                name="artistAddress"
+                                value="0xABCDEF"
+                                readonly
+                            >
+                        </div>
+
+                        <button type="submit" class="btn-primary" id="requestBtn">
+                            <span class="btn-text">Request Access to Secret Track</span>
+                            <span class="btn-loader hidden">
+                                <span class="spinner"></span>
+                                Generating Proof...
+                            </span>
+                        </button>
+                    </form>
+
+                    <!-- Status Messages -->
+                    <div id="statusMessage" class="status-message hidden"></div>
+                </div>
+            </section>
+
+            <!-- Content Unlock Section (Hidden Initially) -->
+            <section class="content-section hidden" id="contentSection">
+                <div class="card unlock-card">
+                    <div class="unlock-animation">
+                        <div class="lock-icon">🔓</div>
+                        <h2 class="unlock-title">Access Granted!</h2>
+                    </div>
+
+                    <div class="content-details">
+                        <h3 id="contentTitle">Secret Track: Midnight Serenade</h3>
+                        <p id="contentDescription">An exclusive unreleased track only for supporters</p>
+                        
+                        <div class="audio-player">
+                            <div class="audio-icon">🎧</div>
+                            <div class="audio-info">
+                                <p><strong>Your secret content is now unlocked!</strong></p>
+                                <a href="#" id="contentUrl" class="download-link" target="_blank">
+                                    🎵 Play Secret Track
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="proof-info">
+                            <h4>Zero-Knowledge Proof Verified ✓</h4>
+                            <p class="proof-details">
+                                You successfully proved you sent more than 50 tDust to the artist 
+                                <strong>without revealing the exact amount</strong>.
+                            </p>
+                            <div class="proof-data">
+                                <code id="proofId">Proof ID: Loading...</code>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="btn-secondary" onclick="location.reload()">
+                        Try Another Address
+                    </button>
+                </div>
+            </section>
+
+            <!-- Info Section -->
+            <section class="info-section">
+                <div class="info-card">
+                    <h3>How It Works</h3>
+                    <div class="steps">
+                        <div class="step">
+                            <span class="step-number">1</span>
+                            <div class="step-content">
+                                <strong>Send tDust</strong>
+                                <p>Support your favorite artist by sending tDust tokens</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <span class="step-number">2</span>
+                            <div class="step-content">
+                                <strong>Generate Proof</strong>
+                                <p>Our proof server creates a ZK proof of your transfer</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <span class="step-number">3</span>
+                            <div class="step-content">
+                                <strong>Verify On-Chain</strong>
+                                <p>Smart contract verifies the proof without exposing details</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <span class="step-number">4</span>
+                            <div class="step-content">
+                                <strong>Unlock Content</strong>
+                                <p>Access exclusive content while maintaining privacy</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <p>Powered by Midnight Blockchain | Zero-Knowledge Proofs</p>
+            <p class="tech-stack">
+                <span>🔗 Proof Server: localhost:6300</span>
+                <span>📡 Indexer: localhost:8088</span>
+                <span>⛓️ Node: localhost:9944</span>
+            </p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+{
+  "address": "0x4a2ef56efb6c2",
+  "network": "ws://localhost:9944",
+  "deployedAt": "2026-02-08T07:32:01.746Z",
+  "initialized": true,
+  "artistThreshold": {
+    "address": "0xABCDEF",
+    "threshold": 50
+  }
+}
