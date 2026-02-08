@@ -15,7 +15,7 @@ const CONFIG = {
     networkUrl: 'ws://localhost:9944',
     proofServerUrl: 'http://localhost:6300',
     defaultThreshold: 50,
-    artistAddress: '0xABCDEF'
+    artistAddress: 'mn_addr_undeployed1n2vdcmqfrlyzj7gk54cre3s2euqdnewzeqmekksjqstawc2yu0lsyd58sn'
 };
 
 /**
