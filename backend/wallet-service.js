@@ -3,19 +3,19 @@
  * Handles real blockchain transaction submission using Midnight Wallet SDK
  */
 
-const ledger = require('@midnight-ntwrk/ledger-v7');
-const { DustWallet } = require('@midnight-ntwrk/wallet-sdk-dust-wallet');
-const { WalletFacade } = require('@midnight-ntwrk/wallet-sdk-facade');
-const { HDWallet, Roles } = require('@midnight-ntwrk/wallet-sdk-hd');
-const { ShieldedWallet } = require('@midnight-ntwrk/wallet-sdk-shielded');
-const {
+import * as ledger from '@midnight-ntwrk/ledger-v7';
+import { DustWallet } from '@midnight-ntwrk/wallet-sdk-dust-wallet';
+import { WalletFacade } from '@midnight-ntwrk/wallet-sdk-facade';
+import { HDWallet, Roles } from '@midnight-ntwrk/wallet-sdk-hd';
+import { ShieldedWallet } from '@midnight-ntwrk/wallet-sdk-shielded';
+import {
     createKeystore,
     InMemoryTransactionHistoryStorage,
-    PublicKey: UnshieldedPublicKey,
+    PublicKey as UnshieldedPublicKey,
     UnshieldedWallet,
-} = require('@midnight-ntwrk/wallet-sdk-unshielded-wallet');
-const { MidnightBech32m } = require('@midnight-ntwrk/wallet-sdk-address-format');
-const rx = require('rxjs');
+} from '@midnight-ntwrk/wallet-sdk-unshielded-wallet';
+import { MidnightBech32m } from '@midnight-ntwrk/wallet-sdk-address-format';
+import * as rx from 'rxjs';
 
 // Configuration
 const INDEXER_PORT = Number.parseInt(process.env['INDEXER_PORT'] || '8088', 10);
@@ -217,7 +217,7 @@ async function getGenesisBalance() {
     };
 }
 
-module.exports = {
+export {
     initGenesisWallet,
     sendTokensToArtist,
     tNIGHTToBaseUnits,

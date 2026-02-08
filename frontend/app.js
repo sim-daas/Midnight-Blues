@@ -1,165 +1,235 @@
-// Midnight Lace Frontend - Main Application Logic
+/**
+ * Midnight Lace Frontend - Real Blockchain Transactions
+ */
 
-const API_BASE_URL = 'http://localhost:3000/api';
+const API_BASE = 'http://localhost:3000/api';
+
+// State
+let currentFan = null;
+let currentBalance = 0;
+let songs = [];
 
 // DOM Elements
-const accessForm = document.getElementById('accessForm');
-const fanAddressInput = document.getElementById('fanAddress');
-const artistAddressInput = document.getElementById('artistAddress');
-const requestBtn = document.getElementById('requestBtn');
-const btnText = requestBtn.querySelector('.btn-text');
-const btnLoader = requestBtn.querySelector('.btn-loader');
+const loginSection = document.getElementById('loginSection');
+const dashboardSection = document.getElementById('dashboardSection');
+const loginForm = document.getElementById('loginForm');
+const fanBalanceAmount = document.getElementById('fanBalanceAmount');
+const fanSpent = document.getElementById('fanSpent');
+const fanPurchaseCount = document.getElementById('fanPurchaseCount');
+const artistAddress = document.getElementById('artistAddress');
+const songsGrid = document.getElementById('songsGrid');
+const purchaseHistory = document.getElementById('purchaseHistory');
 const statusMessage = document.getElementById('statusMessage');
-const accessSection = document.getElementById('accessSection');
-const contentSection = document.getElementById('contentSection');
-
-// Initialize
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('🎵 Midnight Lace initialized');
-
-    // Load any saved addresses from localStorage
-    const savedFanAddress = localStorage.getItem('fanAddress');
-    if (savedFanAddress) {
-        fanAddressInput.value = savedFanAddress;
-    }
-
-    // Setup form submission
-    accessForm.addEventListener('submit', handleAccessRequest);
-});
 
 /**
- * Handle access request form submission
+ * Initialize the app
  */
-async function handleAccessRequest(e) {
+async function init() {
+    loginForm.addEventListener('submit', handleLogin);
+    await loadSongs();
+}
+
+/**
+ * Handle fan login
+ */
+async function handleLogin(e) {
     e.preventDefault();
+    const fanAddressInput = document.getElementById('fanAddress');
+    const address = fanAddressInput.value.trim();
 
-    const fanAddress = fanAddressInput.value.trim();
-    const artistAddress = artistAddressInput.value.trim();
-
-    if (!fanAddress || !artistAddress) {
-        showStatus('Please enter your wallet address', 'error');
+    if (!address) {
+        showStatus('Please enter a wallet address', 'error');
         return;
     }
 
-    // Save fan address to localStorage
-    localStorage.setItem('fanAddress', fanAddress);
-
-    // Start loading state
-    setLoading(true);
-    hideStatus();
+    currentFan = address;
 
     try {
-        // Step 1: Check if transfer exists
-        console.log('Checking transfer...');
-        const transferCheck = await checkTransfer(fanAddress, artistAddress);
+        showStatus('Loading your dashboard...', 'info');
+        await loadFanBalance();
+        await loadPurchaseHistory();
 
-        if (!transferCheck.verified) {
-            throw new Error(transferCheck.message || 'Transfer does not meet the minimum threshold of 50 tDust');
-        }
+        // Re-render songs after balance is loaded to update button states
+        renderSongs();
 
-        showStatus(`✓ Transfer verified: ${transferCheck.transfer.amount} tDust`, 'success');
-        await sleep(1000);
+        // Show dashboard
+        loginSection.classList.add('hidden');
+        dashboardSection.classList.remove('hidden');
 
-        // Step 2: Request ZK proof generation
-        console.log('Generating proof...');
-        const proofResponse = await requestProof(fanAddress, artistAddress, transferCheck.transfer.amount);
-
-        if (!proofResponse.success) {
-            throw new Error(proofResponse.error || 'Failed to generate proof');
-        }
-
-        showStatus('✓ Zero-knowledge proof generated successfully', 'success');
-        await sleep(1000);
-
-        // Step 3: Unlock content
-        console.log('Unlocking content...');
-        const contentResponse = await unlockContent(proofResponse.proof, artistAddress);
-
-        if (!contentResponse.success) {
-            throw new Error(contentResponse.error || 'Failed to unlock content');
-        }
-
-        // Display the unlocked content
-        displayUnlockedContent(contentResponse.content, contentResponse.artist, proofResponse.proof);
+        showStatus(`Welcome! You have ${currentBalance} tNIGHT`, 'success');
+        setTimeout(() => hideStatus(), 3000);
 
     } catch (error) {
-        console.error('Error:', error);
-        showStatus(`❌ ${error.message}`, 'error');
-        setLoading(false);
+        showStatus(`Error loading dashboard: ${error.message}`, 'error');
     }
 }
 
 /**
- * Check if a transfer exists and meets threshold
+ * Load available songs
  */
-async function checkTransfer(fanAddress, artistAddress) {
-    const params = new URLSearchParams({ fanAddress, artistAddress });
-    const response = await fetch(`${API_BASE_URL}/check-transfer?${params}`);
+async function loadSongs() {
+    try {
+        const response = await fetch(`${API_BASE}/songs`);
+        const data = await response.json();
+        songs = data.songs;
+        artistAddress.textContent = data.artistAddress.substring(0, 40) + '...';
+        renderSongs();
+    } catch (error) {
+        console.error('Failed to load songs:', error);
+    }
+}
 
-    if (!response.ok && response.status !== 404) {
-        throw new Error('Failed to check transfer');
+/**
+ * Load fan balance
+ */
+async function loadFanBalance() {
+    const response = await fetch(`${API_BASE}/fan/balance/${currentFan}`);
+    const data = await response.json();
+
+    currentBalance = data.balance;
+    fanBalanceAmount.textContent = data.balance.toLocaleString();
+    fanSpent.textContent = data.spent.toLocaleString();
+    fanPurchaseCount.textContent = data.purchases.length;
+}
+
+/**
+ * Load purchase history
+ */
+async function loadPurchaseHistory() {
+    const response = await fetch(`${API_BASE}/fan/purchases/${currentFan}`);
+    const data = await response.json();
+
+    if (data.purchases.length === 0) {
+        purchaseHistory.innerHTML = '<p class="empty-state">No purchases yet. Buy a song to get started!</p>';
+        return;
     }
 
-    return await response.json();
+    purchaseHistory.innerHTML = data.purchases.map(p => `
+        <div class="history-item">
+            <div class="history-icon">🎵</div>
+            <div class="history-details">
+                <h4>${p.title}</h4>
+                <p>Cost: ${p.cost} tNIGHT | ${new Date(p.timestamp).toLocaleString()}</p>
+                <p class="tx-hash">TX: ${p.txHash.substring(0, 20)}...</p>
+            </div>
+            <div class="history-cost">${p.cost} tNIGHT</div>
+        </div>
+    `).join('');
 }
 
 /**
- * Request ZK proof generation from proof server
+ * Render songs grid
  */
-async function requestProof(fanAddress, artistAddress, amount) {
-    const response = await fetch(`${API_BASE_URL}/request-proof`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ fanAddress, artistAddress, amount })
-    });
+function renderSongs() {
+    songsGrid.innerHTML = songs.map(song => {
+        const isPurchased = currentFan && isPurchasedSong(song.id);
+        const canAfford = currentBalance >= song.requiredTokens;
 
-    return await response.json();
+        return `
+            <div class="song-card ${isPurchased ? 'purchased' : ''} ${!canAfford && !isPurchased ? 'locked' : ''}">
+                <div class="song-tier">Tier ${song.tier}</div>
+                ${isPurchased ? '<div class="purchased-badge">✓ Owned</div>' : ''}
+                
+                <div class="song-icon">🎵</div>
+                <h3 class="song-title">${song.title}</h3>
+                <p class="song-artist">${song.artist}</p>
+                <p class="song-description">${song.description}</p>
+                
+                <div class="song-meta">
+                    <span>🎼 ${song.genre}</span>
+                    <span>⏱️ ${song.duration}</span>
+                </div>
+                
+                <div class="song-price">${song.requiredTokens} tNIGHT</div>
+                
+                ${isPurchased
+                ? '<button class="btn-secondary" disabled>Already Purchased</button>'
+                : canAfford
+                    ? `<button class="btn-primary" onclick="purchaseSong('${song.id}')">🛒 Purchase</button>`
+                    : '<button class="btn-secondary" disabled>Insufficient Balance</button>'
+            }
+            </div>
+        `;
+    }).join('');
 }
 
 /**
- * Unlock content using the generated proof
+ * Check if song is purchased
  */
-async function unlockContent(proof, artistAddress) {
-    const response = await fetch(`${API_BASE_URL}/unlock-content`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ proof, artistAddress })
-    });
-
-    return await response.json();
+function isPurchasedSong(songId) {
+    // This will be checked from purchase history
+    const historyItems = purchaseHistory.querySelectorAll('.history-item');
+    return Array.from(historyItems).some(item =>
+        item.querySelector('h4').textContent === songs.find(s => s.id === songId)?.title
+    );
 }
 
 /**
- * Display unlocked content to the user
+ * Purchase a song - REAL BLOCKCHAIN TRANSACTION!
  */
-function displayUnlockedContent(content, artist, proof) {
-    // Update content details
-    document.getElementById('contentTitle').textContent = content.title;
-    document.getElementById('contentDescription').textContent = content.description;
-    document.getElementById('contentUrl').href = content.url;
-    document.getElementById('proofId').textContent = `Proof ID: ${proof.proofId}`;
+window.purchaseSong = async function (songId) {
+    const song = songs.find(s => s.id === songId);
+    if (!song) return;
 
-    // Hide access form and show content with animation
-    setLoading(false);
-    setTimeout(() => {
-        accessSection.classList.add('hidden');
-        contentSection.classList.remove('hidden');
+    if (currentBalance < song.requiredTokens) {
+        showStatus('Insufficient balance!', 'error');
+        return;
+    }
 
-        // Scroll to content section
-        contentSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 500);
+    if (!confirm(`Purchase "${song.title}" for ${song.requiredTokens} tNIGHT?\\n\\nThis will submit a REAL transaction to the blockchain!`)) {
+        return;
+    }
 
-    console.log('✨ Content unlocked successfully!');
-}
+    showStatus(`Processing purchase... Submitting blockchain transaction...`, 'info');
+
+    try {
+        const response = await fetch(`${API_BASE}/purchase-song`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                fanAddress: currentFan,
+                songId: song.id
+            })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || 'Purchase failed');
+        }
+
+        // Success!
+        showStatus(`✅ Purchase successful! TX: ${data.transaction.txHash.substring(0, 20)}...`, 'success');
+
+        // Update UI
+        await loadFanBalance();
+        await loadPurchaseHistory();
+        renderSongs();
+
+        // Show transaction details
+        setTimeout(() => {
+            alert(
+                `🎉 Song Unlocked!\\n\\n` +
+                `Song: ${song.title}\\n` +
+                `Cost: ${song.requiredTokens} tNIGHT\\n` +
+                `TX Hash: ${data.transaction.txHash}\\n\\n` +
+                `The artist's wallet has received ${song.requiredTokens} tNIGHT on-chain!\\n` +
+                `Check their Lace wallet to see the balance increase.`
+            );
+        }, 1000);
+
+    } catch (error) {
+        showStatus(`❌ Purchase failed: ${error.message}`, 'error');
+        console.error('Purchase error:', error);
+    }
+};
 
 /**
  * Show status message
  */
-function showStatus(message, type = 'success') {
+function showStatus(message, type = 'info') {
     statusMessage.textContent = message;
     statusMessage.className = `status-message ${type}`;
     statusMessage.classList.remove('hidden');
@@ -172,48 +242,5 @@ function hideStatus() {
     statusMessage.classList.add('hidden');
 }
 
-/**
- * Set loading state on button
- */
-function setLoading(isLoading) {
-    if (isLoading) {
-        requestBtn.disabled = true;
-        btnText.classList.add('hidden');
-        btnLoader.classList.remove('hidden');
-    } else {
-        requestBtn.disabled = false;
-        btnText.classList.remove('hidden');
-        btnLoader.classList.add('hidden');
-    }
-}
-
-/**
- * Utility: Sleep function
- */
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-/**
- * Format address for display (shortened)
- */
-function formatAddress(address) {
-    if (!address || address.length < 10) return address;
-    return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
-}
-
-// Debug helper - check backend connectivity
-async function checkBackendHealth() {
-    try {
-        const response = await fetch(`${API_BASE_URL}/health`);
-        const data = await response.json();
-        console.log('✅ Backend health check:', data);
-        return true;
-    } catch (error) {
-        console.error('❌ Backend not reachable:', error);
-        return false;
-    }
-}
-
-// Run health check on load
-checkBackendHealth();
+// Initialize on load
+init();

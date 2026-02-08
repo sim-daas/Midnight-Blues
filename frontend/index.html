@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Midnight Lace - Secret Content Unlock</title>
+    <title>🌙 Midnight Lace - Premium Music Unlock</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -14,137 +14,114 @@
     <div class="container">
         <header class="header">
             <h1 class="logo">🌙 Midnight Lace</h1>
-            <p class="tagline">Privacy-Preserving Content Access via Zero-Knowledge Proofs</p>
+            <p class="tagline">Privacy-Preserving Music Access on Midnight Blockchain</p>
         </header>
 
-        <main class="main-content">
-            <!-- Access Request Section -->
-            <section class="access-section" id="accessSection">
-                <div class="card">
-                    <h2>🎵 Unlock Secret Track</h2>
-                    <p class="description">
-                        Prove you've supported <strong>The Midnight Artist</strong> with more than <strong>50
-                            tDust</strong>
-                        to access their exclusive unreleased track.
-                    </p>
+        <!-- Fan Login Section -->
+        <section id="loginSection" class="section">
+            <div class="card">
+                <h2>🎭 Enter as a Fan</h2>
+                <p class="description">
+                    Enter your wallet address to browse exclusive music from <strong>The Midnight Artist</strong>
+                </p>
 
-                    <form id="accessForm" class="access-form">
-                        <div class="form-group">
-                            <label for="fanAddress">Your Wallet Address</label>
-                            <input type="text" id="fanAddress" name="fanAddress" placeholder="0x123456789..." required>
-                            <small>Your address remains private in the zero-knowledge proof</small>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="artistAddress">Artist Address</label>
-                            <input type="text" id="artistAddress" name="artistAddress"
-                                value="mn_addr_undeployed1n2vdcmqfrlyzj7gk54cre3s2euqdnewzeqmekksjqstawc2yu0lsyd58sn"
-                                readonly>
-                        </div>
-
-                        <button type="submit" class="btn-primary" id="requestBtn">
-                            <span class="btn-text">Request Access to Secret Track</span>
-                            <span class="btn-loader hidden">
-                                <span class="spinner"></span>
-                                Generating Proof...
-                            </span>
-                        </button>
-                    </form>
-
-                    <!-- Status Messages -->
-                    <div id="statusMessage" class="status-message hidden"></div>
-                </div>
-            </section>
-
-            <!-- Content Unlock Section (Hidden Initially) -->
-            <section class="content-section hidden" id="contentSection">
-                <div class="card unlock-card">
-                    <div class="unlock-animation">
-                        <div class="lock-icon">🔓</div>
-                        <h2 class="unlock-title">Access Granted!</h2>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="fanAddress">Your Wallet Address</label>
+                        
+                        <input type="text" id="fanAddress" name="fanAddress" placeholder="0xYourAddress..." required>
+                        <small>You'll start with 10,000 demo tokens</small>
                     </div>
 
-                    <div class="content-details">
-                        <h3 id="contentTitle">Secret Track: Midnight Serenade</h3>
-                        <p id="contentDescription">An exclusive unreleased track only for supporters</p>
-
-                        <div class="audio-player">
-                            <div class="audio-icon">🎧</div>
-                            <div class="audio-info">
-                                <p><strong>Your secret content is now unlocked!</strong></p>
-                                <a href="#" id="contentUrl" class="download-link" target="_blank">
-                                    🎵 Play Secret Track
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="proof-info">
-                            <h4>Zero-Knowledge Proof Verified ✓</h4>
-                            <p class="proof-details">
-                                You successfully proved you sent more than 50 tDust to the artist
-                                <strong>without revealing the exact amount</strong>.
-                            </p>
-                            <div class="proof-data">
-                                <code id="proofId">Proof ID: Loading...</code>
-                            </div>
-                        </div>
-                    </div>
-
-                    <button class="btn-secondary" onclick="location.reload()">
-                        Try Another Address
+                    <button type="submit" class="btn-primary">
+                        🚀 Enter Dashboard
                     </button>
-                </div>
-            </section>
+                </form>
+            </div>
+        </section>
 
-            <!-- Info Section -->
-            <section class="info-section">
-                <div class="info-card">
-                    <h3>How It Works</h3>
-                    <div class="steps">
-                        <div class="step">
-                            <span class="step-number">1</span>
-                            <div class="step-content">
-                                <strong>Send tDust</strong>
-                                <p>Support your favorite artist by sending tDust tokens</p>
-                            </div>
-                        </div>
-                        <div class="step">
-                            <span class="step-number">2</span>
-                            <div class="step-content">
-                                <strong>Generate Proof</strong>
-                                <p>Our proof server creates a ZK proof of your transfer</p>
-                            </div>
-                        </div>
-                        <div class="step">
-                            <span class="step-number">3</span>
-                            <div class="step-content">
-                                <strong>Verify On-Chain</strong>
-                                <p>Smart contract verifies the proof without exposing details</p>
-                            </div>
-                        </div>
-                        <div class="step">
-                            <span class="step-number">4</span>
-                            <div class="step-content">
-                                <strong>Unlock Content</strong>
-                                <p>Access exclusive content while maintaining privacy</p>
-                            </div>
-                        </div>
+        <!-- Main Dashboard (hidden initially) -->
+        <section id="dashboardSection" class="section hidden">
+            <!-- Balance Cards -->
+            <div class="balance-grid">
+                <div class="balance-card fan-balance">
+                    <h3>💰 Your Balance</h3>
+                    <div class="balance-amount" id="fanBalanceAmount">10,000</div>
+                    <div class="balance-label">tNIGHT</div>
+                    <div class="balance-info">
+                        <span>Spent: <span id="fanSpent">0</span> tNIGHT</span>
+                        <span>Songs: <span id="fanPurchaseCount">0</span></span>
                     </div>
                 </div>
-            </section>
-        </main>
+
+                <div class="balance-card artist-balance">
+                    <h3>🎵 Artist Info</h3>
+                    <div class="artist-name">The Midnight Artist</div>
+                    <div class="artist-address" id="artistAddress">Loading...</div>
+                    <div class="balance-info">
+                        <span>Available Songs: 5</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Songs Grid -->
+            <div class="songs-section">
+                <h2>🎼 Premium Music Collection</h2>
+                <p class="section-description">
+                    Purchase songs using your demo tokens. Real blockchain transactions update the artist's wallet!
+                </p>
+
+                <div id="songsGrid" class="songs-grid">
+                    <!-- Songs will be dynamically loaded here -->
+                </div>
+            </div>
+
+            <!-- Purchase History -->
+            <div class="history-section">
+                <h2>📜 Your Purchase History</h2>
+                <div id="purchaseHistory" class="purchase-history">
+                    <p class="empty-state">No purchases yet. Buy a song to get started!</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Status Messages -->
+        <div id="statusMessage" class="status-message hidden"></div>
+
+        <!-- Info Section -->
+        <section class="info-section">
+            <h3>🔐 How It Works</h3>
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="info-icon">🎫</div>
+                    <h4>Demo Tokens</h4>
+                    <p>Start with 10,000 tNIGHT tokens for testing</p>
+                </div>
+                <div class="info-card">
+                    <div class="info-icon">⛓️</div>
+                    <h4>Real Transactions</h4>
+                    <p>Purchases submit actual transactions to the blockchain</p>
+                </div>
+                <div class="info-card">
+                    <div class="info-icon">💎</div>
+                    <h4>Artist Receives</h4>
+                    <p>Artist's Lace wallet balance increases on-chain</p>
+                </div>
+                <div class="info-card">
+                    <div class="info-icon">🔒</div>
+                    <h4>Privacy First</h4>
+                    <p>Zero-knowledge proofs protect your transaction details</p>
+                </div>
+            </div>
+        </section>
 
         <footer class="footer">
-            <p>Powered by Midnight Blockchain | Zero-Knowledge Proofs</p>
-            <p class="tech-stack">
-                <span>🔗 Proof Server: localhost:6300</span>
-                <span>📡 Indexer: localhost:8088</span>
-                <span>⛓️ Node: localhost:9944</span>
-            </p>
+            <p>Built with Midnight Blockchain | Local Testnet</p>
+            <p>Genesis Wallet provides demo transactions</p>
         </footer>
     </div>
 
-    <script src="app.js"></script>
+    <script src="app.js" type="module"></script>
 </body>
 
 </html>

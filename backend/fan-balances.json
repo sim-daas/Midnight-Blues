@@ -1,4 +1,30 @@
 {
-    "initialBalance": 10000,
-    "fans": {}
+  "initialBalance": 10000,
+  "fans": {
+    "0xDEMO_FAN_1": {
+      "balance": 8500,
+      "spent": 1500,
+      "purchases": [
+        {
+          "songId": "song1",
+          "title": "Midnight Serenade",
+          "cost": 500,
+          "txHash": "00ab7d90b305489f98498996d490763ce3ba44d52ff8c229b2cdb4bdb0259e614a",
+          "timestamp": "2026-02-08T10:05:25.829Z"
+        },
+        {
+          "songId": "song2",
+          "title": "Shadows & Dreams",
+          "cost": 1000,
+          "txHash": "000ed2b4208eba3c0524e72a9c30a7ec31fd7137d8fcb63bb148b275680177d097",
+          "timestamp": "2026-02-08T10:06:13.855Z"
+        }
+      ]
+    },
+    "0x123456789": {
+      "balance": 10000,
+      "spent": 0,
+      "purchases": []
+    }
+  }
 }

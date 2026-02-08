@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Backend API server for Midnight Lace proof-of-concept",
   "main": "api-server.js",
+  "type": "module",
   "scripts": {
     "start": "node api-server.js",
     "dev": "nodemon api-server.js"
